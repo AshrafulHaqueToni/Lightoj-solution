@@ -46,15 +46,7 @@ void initialize()
 
 int pp(int x)
 {
-    if(x!=parent[x])
-    {
-        while(1)
-        {
-            if(x==parent[x])break;
-            x=parent[x];
-        }
-    }
-    return x;
+    return (x==parent[x])?x:(parent[x]=pp(parent[x]));
 }
 
 void Union(int x,int y)
