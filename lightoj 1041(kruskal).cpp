@@ -40,7 +40,7 @@ vector<int>parent(55);
 
 int Fparent(int x)
 {
-    return (x==parent[x])?x:(parent[x]=pp(parent[x]));
+    return (x==parent[x])?x:(parent[x]=Fparent(parent[x]));
 }
 
 
