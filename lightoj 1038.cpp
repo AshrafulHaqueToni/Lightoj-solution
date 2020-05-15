@@ -21,7 +21,7 @@ ll func(int n)
         if(it==n)break;
         sum+=(func(it)+1.0)/sz;
     }
-    cout<<sum<<endl;
+   // cout<<sum<<endl;
     re=(sum*sz+1)/(sz-1);
     //cout<<re<<endl;
     return re;
