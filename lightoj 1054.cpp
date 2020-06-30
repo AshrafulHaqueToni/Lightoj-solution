@@ -1,121 +1,93 @@
 #include<bits/stdc++.h>
 using namespace std;
-typedef unsigned long long  ll;
 
-const int mod=1e9+7;
-const int N = 1000005;
+#define mx 100005
+#define ll long long
+#define mod 1000000007
 
-map<ll,vector<ll> >mm;
+int ar[mx];
+char ch[mx];
+vector<int>prime;
+bool f[mx];
+int n,m,k,ii;
 
-vector<ll>prime;
+ll bigmod(ll e,ll x)
+{
+    if(!x)return 1;
+    ll p=bigmod(e,x/2);
+    p=(p*p)%mod;
+    if(x%2)p=(p*e)%mod;
+    return p;
+}
 
 void seive()
 {
-
-    bool a[N+3];
-    for(ll i=1; i<=N; i++)
-        a[i]=true;
-    for(ll i=3; i*i<=N; i+=2)
+    for(int i=2;i<=100005;i++)
     {
-        if(a[i])
+        if(f[i]==false)
         {
-            for(ll j=i*i; j<=N; j+=i)
-                a[j]=false;
+            prime.push_back(i);
+            for(ll j=1LL*i*i;j<=(ll)100005;j+=i)
+            {
+                f[j]=true;
+            }
         }
     }
-    prime.push_back(2);
-    for(ll i=3; i<=N; i+=2)
-    {
-        if(a[i])
-            prime.push_back(i);
-    }
-
 }
 
-
-void primefactorize(ll n)
+void solve()
 {
-    for(ll i=0; prime[i]*prime[i]<=n&&i<prime.size(); i++)
+    scanf("%d%d",&n,&m);
+    if(n==mod)
+    {
+        printf("Case %d: 1\n",++ii);
+        return;
+    }
+     vector<pair<int,int>>tem;
+     int sz=prime.size();
+    for(int i=0;i<sz && (ll)prime[i]*prime[i]<=(ll)n;i++)
     {
         if(n%prime[i]==0)
         {
-            int k=0;
-
+            int cnt=0;
             while(n%prime[i]==0)
             {
-                k++;
                 n/=prime[i];
+                cnt++;
             }
-            mm[prime[i]].push_back(k);
+            tem.push_back({prime[i],cnt});
         }
     }
-    if(n>1)
+    if(n>1)tem.push_back({n,1});
+    ll re=1;
+    for(auto it:tem)
     {
-        mm[n].push_back(1);
+      //  cout<<it.first<<" "<<it.second<<endl;
+        ll p=it.first;
+        ll e=(ll)it.second*m+1;
+       // cout<<p<<" "<<e<<endl;
+        ll x=(bigmod(p,e)-1+mod)%mod;
+        ll y=bigmod(p-1,mod-2);
+        x=(x*y)%mod;
+       // cout<<x<<endl;
+        re=(re*x)%mod;
+       // cout<<re<<endl;
     }
+    printf("Case %d: %lld\n",++ii,re);
+
 }
-
-
-ll bigmod(ll n,ll p)
-{
-    if(p==0)return 1;
-    if(p==1)return (n+mod)%mod;
-    if(p&1){
-        ll re=bigmod(n,p-1)%mod;
-        return (re*n+mod)%mod;
-    }
-    else{
-        ll re=bigmod(n,p/2)%mod;
-
-        return (re*re+mod)%mod;
-    }
-}
-
-ll modinverse(ll n)
-{
-    return bigmod(n,mod-2)%mod;
-}
-
-
-
+/*
+1
+22 4
+*/
 
 int main()
 {
-    //freopen("inputt.txt","r",stdin);
-    seive();
-
-    int t;
-    scanf("%d",&t);
-    ll n,m;
-    for(int tc=1;tc<=t;tc++)
-    {
-        scanf("%llu%llu",&n,&m);
-
-        mm.clear();
-
-        primefactorize(n);
-
-        ll re=1;
-
-        if(n!=mod)
-
-        for(auto it: mm)
-        {
-            ll r=it.first,p=it.second[0];
-
-            ll h=(bigmod(r,p*m+1)-1)%mod;
-            ll lo=modinverse(r-1)%mod;
-
-            ll fi;
-            fi=(h%mod*lo%mod)%mod;
-
-            re=(re%mod*fi%mod)%mod;
-        }
-
-
-       printf("Case %d: %llu\n",tc,re);
-
-    }
-
-    return 0;
+   //freopen("in.txt","r",stdin);
+   //freopen("out.txt","w",stdout);
+   int t=1;
+   seive();
+   scanf("%d",&t);
+   while(t--)solve();
+   return 0;
 }
