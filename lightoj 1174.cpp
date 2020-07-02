@@ -1,105 +1,81 @@
-//***Bismillahir Rahmanir Rahim***//
-
-//*********************************//
-//******Ashraful Haque Toni********//
-//********Dept. of CSE,JnU*********//
-//email:ashrafulhaquetoni@gmail.com//
-//*******contact:01640690531*******//
-//*********************************//
-
-
 #include<bits/stdc++.h>
-
 using namespace std;
 
-#define         ash ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-#define         pb push_back
-#define         sc scanf
-#define         pf printf
-#define         Max(x,y) max(x,y)?x:y;
-#define         Min(x,y) min(x,y)?x:y;
-#define         input(array,size) for(int i=0;i<size;i++)cin>>array[i];
-#define         newline pf("\n");
+#define mx 105
+#define ll long long
 
+int ar[mx];
+char ch[mx];
+vector<int>g[mx];
+int st[mx],en[mx];
+int n,m,k,ii;
 
-typedef long long ll;
-
-
-vector<int>v[1000];
-int dis[1000],dis1[1000];
-int node,k,kk,cnt;
-
-void bfs(int startnode,int dis[])
+void bfs(int p)
 {
+    st[p]=0;
     queue<int>q;
-    vector<int>color(1000,1);
-    q.push(startnode);
-    dis[startnode]=0;
+    q.push(p);
     while(!q.empty())
     {
-        int x=q.front();
+        int u=q.front();
         q.pop();
-        color[x]=2;
-        for(int i=0; i<v[x].size(); i++)
+        for(auto it:g[u])
         {
-            if(color[v[x][i]]==1)
-            {
-                q.push(v[x][i]);
-                color[v[x][i]]=2;
-                    dis[v[x][i]]=dis[x]+1;
-            }
+            if(st[it]!=-1 && st[it]<=st[u]+1)continue;
+            st[it]=st[u]+1;
+            q.push(it);
         }
     }
+}
 
+void bfs1(int p)
+{
+    en[p]=0;
+    queue<int>q;
+    q.push(p);
+    while(!q.empty())
+    {
+        int u=q.front();
+        q.pop();
+        for(auto it:g[u])
+        {
+            if(en[it]!=-1 && en[it]<=en[u]+1)continue;
+            en[it]=en[u]+1;
+            q.push(it);
+        }
+    }
+}
 
-
+void solve()
+{
+    scanf("%d%d",&n,&m);
+    for(int i=1;i<=m;i++)
+    {
+        int x,y;
+        scanf("%d%d",&x,&y);
+        x++,y++;
+        g[x].push_back(y);
+        g[y].push_back(x);
+    }
+    int x,y;
+    scanf("%d%d",&x,&y);
+    x++,y++;
+    memset(st,-1,sizeof(st));
+    memset(en,-1,sizeof(en));
+    bfs(x);
+    bfs1(y);
+    int re=0;
+    for(int i=1;i<=n;i++)re=max(re,st[i]+en[i]);
+    printf("Case %d: %d\n",++ii,re);
+    for(int i=1;i<=n;i++)g[i].clear();
 }
 
 int main()
 {
-   // ash;
-    //freopen("bfs.txt","r",stdin);
-    int t;
-    sc("%d",&t);
-    while(t--)
-    {
-        int edge;
-        sc("%d %d",&node,&edge);
-        for(int i=0; i<edge; i++)
-        {
-            int a1,a2;
-            cin>>a1>>a2;
-
-            v[a1].pb(a2);
-            v[a2].pb(a1);
-        }
-
-        int st,en;
-        cin>>st>>en;
-
-        memset(dis,-1,sizeof(dis));
-        bfs(st,dis);
-
-
-        memset(dis1,-1,sizeof(dis1));
-        bfs(en,dis1);
-
-
-        int ma=INT_MIN;
-
-        for(int i=0;i<node;i++)ma=max(ma,dis[i]+dis1[i]);
-
-
-        pf("Case %d: %d\n",++kk,ma);
-
-
-        for(int i=0; i<1000; i++)
-            v[i].clear();
-    }
-
-
-    return 0;
+   //freopen("in.txt","r",stdin);
+   //freopen("out.txt","w",stdout);
+   int t=1;
+   scanf("%d",&t);
+   while(t--)solve();
+   return 0;
 }
-
-
-
