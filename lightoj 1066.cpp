@@ -1,162 +1,87 @@
-///***Bismillahir Rahmanir Rahim***///
-
-///*********************************///
-///******Ashraful Haque Toni********///
-///********Dept. of CSE,JnU*********///
-///email:ashrafulhaquetoni@gmail.com///
-///*******contact:01640690531*******///
-///*********************************///
-
-
 #include<bits/stdc++.h>
-
 using namespace std;
 
-#define         ash ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-#define         pb push_back
-#define         mp make_pair
-#define         sc(n) scanf("%d",&n);
-#define         scl(n) scanf("%I64d",&n);
-#define         sc2(m,n) scanf("%d%d",&m,&n);
-#define         sc2l(m,n) scanf("%I64d%I64d",&m,&n);
-#define         pf printf
-#define         Big(x,y) max(x,y);
-#define         Small(x,y) min(x,y);
-#define         array_input(array,size) for(int i=0;i<size;i++)cin>>array[i];
-#define         vector_input(v,size) for(int i=0;i<size;i++){lln,cin>>n,v.pb(n);}
-#define         newline pf("\n");
-#define         f(i,n) for(ll i=0;i<(n);i++)
-#define         f1(i,n) for(ll i=1;i<=(n);i++)
-#define         Max INT_MAX
-#define         Min INT_MIN
-#define         pi acos(-1.0)
-#define         Memset(a,val) memset(a,val,sizeof(a));
-#define         pa pair<int,int>
-#define         paa pair<int,pair<int,int> >
-#define         se second
-#define         ff first
+#define mx 12
+#define ll long long
 
+int ar[mx];
+char ch[mx][mx];
+int dis[mx][mx];
+int xi,yi;
+pair<int,int>pos[27];
+int xx[]={1,0,-1,0};
+int yy[]={0,1,0,-1};
+int n,m,k,ii;
 
-const int mod =1e9+7;
-const int N =5e6+5;
-typedef long long ll;
-
-char s[11][11];
-int a[11][11];
-int visit[11][11],xi,yi,n,k;
-int Xx[]={0,1,0,-1};
-int Yy[]={1,0,-1,0};
-
-
-
-
-
-int bfs(vector<paa>p,int curent)
+bool Is_valid(int x,int y)
 {
-    int x,y;
-    if(curent==k)return p[0].ff;
-
-    Memset(visit,0);
-
-    queue<vector<paa> >q;
-    q.push(p);
-
-    while(!q.empty())
-    {
-        vector<paa>vv,vvv;
-
-        vv=q.front();
-        q.pop();
-
-        f(i,4){
-
-           x=vv[0].se.ff+Xx[i];
-           y=vv[0].se.se+Yy[i];
-
-           if(x<0||x>=n||y>=n||y<0)continue;
-
-           if(a[x][y]==curent+1){
-
-               int xxx=(vv[0].ff+1);
-               vvv.pb({xxx,{x,y}});
-
-
-                return bfs(vvv,curent+1);
-           }
-
-           if(!visit[x][y]&&(a[x][y]>=0&&a[x][y]<=curent)){
-
-            visit[x][y]=1;
-
-
-            vector<paa>ppp;
-            int xxx=(vv[0].ff+1);
-            ppp.pb({xxx,{x,y}});
-
-
-            q.push(ppp);
-           }
-
-        }
-    }
-
-    return -1;
-
-
-
+    if(x>=0 && x<n && y>=0 && y<n && ch[x][y]!='#' && (ch[x][y]=='.' || (ch[x][y]<=ch[xi][yi])))return true;
+    return false;
 }
 
+void bfs(int x,int y)
+{
+    queue<pair<int,int>>q;
+    q.push({x,y});
+    dis[x][y]=0;
+    while(!q.empty())
+    {
+        x=q.front().first;
+        y=q.front().second;
+        q.pop();
+        for(int j=0;j<4;j++)
+        {
+            int tx=x+xx[j];
+            int ty=y+yy[j];
+            if(Is_valid(tx,ty))
+            {
+                if(dis[tx][ty]!=-1 && dis[tx][ty]<=dis[x][y]+1)continue;
+                dis[tx][ty]=dis[x][y]+1;
+                q.push({tx,ty});
+            }
+        }
+    }
+}
 
+void solve()
+{
+   scanf("%d",&n);
+   for(int i=0;i<n;i++)scanf("%s",ch[i]);
+   int boro=0;
+   for(int i=0;i<n;i++)
+   {
+       for(int j=0;j<n;j++)
+       {
+           if(ch[i][j]>='A' && ch[i][j]<='Z')
+           {
+               pos[ch[i][j]-'A']={i,j};
+               boro=max(boro,ch[i][j]-'A');
+           }
+       }
+   }
+   int re=0;
+   for(int i=0;i<boro;i++)
+   {
+       xi=pos[i+1].first;
+       yi=pos[i+1].second;
+       memset(dis,-1,sizeof(dis));
+       bfs(pos[i].first,pos[i].second);
+       if(dis[xi][yi]==-1)
+       {
+           printf("Case %d: Impossible\n",++ii);
+           return;
+       }
+       re+=dis[xi][yi];
+   }
+   printf("Case %d: %d\n",++ii,re);
+}
 
 int main()
 {
-    freopen("1066.txt","r",stdin);
-
-    ash;
-    int t;
-    cin>>t;
-    f1(ii,t)
-    {
-        int cont;
-        cin>>n;
-        f(i,n)
-        {
-            f(j,n)
-            {
-                cin>>s[i][j];
-                if(s[i][j]=='.')a[i][j]=0;
-                else if(s[i][j]=='#')a[i][j]=-1;
-                else{
-                        if(s[i][j]=='A'){
-                            xi=i,yi=j;
-                        }
-                    int m=s[i][j]-'A';
-                    a[i][j]=m;
-                    k=max(k,m);
-                }
-
-            }
-        }
-
-
-         vector<paa>p;
-         p.pb({0,{xi,yi}});
-
-         cout<<"Case "<<ii<<": ";
-
-        cont=bfs(p,0);
-
-        if(cont>=0)cout<<cont<<endl;
-        else cout<<"Impossible"<<endl;
-
-        Memset(a,0);
-        k=0;
-
-
-    }
-
-
-
-    return 0;
+   //freopen("in.txt","r",stdin);
+   //freopen("out.txt","w",stdout);
+   int t=1;
+   scanf("%d",&t);
+   while(t--)solve();
+   return 0;
 }
-
