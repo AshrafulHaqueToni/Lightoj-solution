@@ -1,65 +1,66 @@
 #include<bits/stdc++.h>
 using namespace std;
- 
+
+#define mx 100005
 #define ll long long
- 
-int n;
- 
-int zero(int val)
+
+int ar[mx];
+char ch[mx];
+
+int n,m,k,ii;
+
+int cnt(int val)
 {
-    int re=0;
- 
-    ll tem=5;
- 
-    while(val>=tem)
+    int tem=0;
+    int sp=val;
+    while(sp>=2)
     {
-        re+=val/tem;
-        tem*=5;
+        tem+=sp/2;
+        sp/=2;
     }
- 
-    return re;
+    int re=tem;
+    tem=0;
+    sp=val;
+    while(sp>=5)
+    {
+        tem+=sp/5;
+        sp/=5;
+    }
+    return min(re,tem);
 }
- 
-int func(int be,int en)
+
+void solve()
 {
-    if(be>en)return -1;
- 
-    int mid=(be+en)/2;
- 
-    int cnt=zero(mid);
- 
-    if(cnt==n)
-    {
-        while(cnt==zero(mid))
-        {
-            mid--;
-        }
-        return ++mid;
-    }
-    else
-    {
-        if(cnt>n)return func(be,mid-1);
-        else return func(mid+1,en);
-    }
+     scanf("%d",&n);
+     int be=5,en=1e9;
+     int re=-1;
+     while(be<=en)
+     {
+         int mid=(be+en)/2;
+         int val=cnt(mid);
+       //  cout<<val<<" "<<mid<<endl;
+         if(val==n)
+         {
+             re=mid;
+             en=mid-1;
+         }
+         else
+         {
+             if(val>n)en=mid-1;
+             else be=mid+1;
+         }
+     }
+     printf("Case %d: ",++ii);
+     if(re==-1)printf("impossible\n");
+     else printf("%d\n",re);
 }
- 
-void solve(int ii)
-{
-   scanf("%d",&n);
- 
-   int val=func(1,1e9);
- 
-   if(val!=-1)
-   {
-       printf("Case %d: %d\n",ii,val);
-   }
-   else printf("Case %d: impossible\n",ii);
-}
- 
+
 int main()
 {
-    int t=1;
-    scanf("%d",&t);
- 
-    for(int ii=1;ii<=t;ii++)solve(ii);
+   //freopen("in.txt","r",stdin);
+   //freopen("out.txt","w",stdout);
+   int t=1;
+   scanf("%d",&t);
+   while(t--)solve();
+   return 0;
 }
