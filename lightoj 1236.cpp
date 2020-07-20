@@ -1,67 +1,61 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+#define mx 10000005
 #define ll long long
-vector<int>prime;
-bool is_composite[10000005];
 
-void sieve(int n)
+bitset<mx>chk;
+vector<int>prime;
+
+void seive(int n)
 {
-    for(int i=2; i*i<n; i++)
+    for(int i=3;i*i<=n;i++)
     {
-        if(is_composite[i]==false)
+        if(!chk[i])
         {
-            for(int j=i*i; j<n; j+=i)
+            for(int j=i*i;j<=n;j+=i*2)
             {
-                is_composite[j]=true;
+                chk[j]=1;
             }
         }
     }
-
     prime.push_back(2);
-
-    for(int i=3; i<n; i+=2)
-    {
-        if(is_composite[i]==false)
-            prime.push_back(i);
-    }
+    for(int i=3;i<=n;i+=2)if(!chk[i])prime.push_back(i);
 }
 
+int n,m,k,ii;
 
-
-void solve(int ii)
+void solve()
 {
-
-    ll num;
-    scanf("%lld",&num);
-    ll ans=1;
-
-    for(auto it:prime)
+    ll val;
+    scanf("%lld",&val);
+    ll re=1;
+    int sz=prime.size();
+    for(int i=0;i<sz && prime[i]*(ll)prime[i]<=val;i++)
     {
-        if(it*it>num)break;
-        int cnt=1;
-        if(num%it==0)
+        if(val%prime[i]==0)
         {
-            while(num%it==0)
+            int cnt=0;
+            while(val%prime[i]==0)
             {
-                num/=it;
+                val/=prime[i];
                 cnt++;
             }
+            re*=(2*cnt+1);
         }
-
-        ans*=(2*(cnt-1)+1);
     }
-
-    if(num>1)ans*=3;
-
-    printf("Case %d: %lld\n",ii,(ans+1)/2);
+    if(val>1)re*=3;
+    re++;
+    printf("Case %d: %lld\n",++ii,re/2);
 }
 
 int main()
 {
-    sieve(10000005);
-    int t;
-    scanf("%d",&t);
-
-    for(int ii=1;ii<=t;ii++)solve(ii);
+   //freopen("in.txt","r",stdin);
+   //freopen("out.txt","w",stdout);
+   int t=1;
+   seive(mx-5);
+   scanf("%d",&t);
+   while(t--)solve();
+   return 0;
 }
