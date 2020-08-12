@@ -1,86 +1,76 @@
 #include<bits/stdc++.h>
 using namespace std;
+ 
+#define mx 1000005
 
-
-int main()
+void IO()
 {
-    //freopen("input.txt","r",stdin);
-    int t;
-    scanf("%d",&t);
+    #ifndef ONLINE_JUDGE
+    freopen("in.txt","r",stdin);
+    freopen("out.txt","w",stdout);
+    #endif
+}
+ 
+int ii,n,q;
+pair<int,int>ar[mx];
+set<int>s;
+map<int,int>mp;
+int prefix[mx];
 
-    for(int ii=1; ii<=t; ii++)
+void solve()
+{
+    scanf("%d%d",&n,&q);
+    for(int i=1;i<=n;i++)
     {
-        int n,q,mx=-1;
-
-        scanf("%d %d",&n,&q);
-
-        vector<int>all,query;
-        vector<pair<int,int> >v;
-
-        map<int,int>m;
-
-        for(int i=0; i<n; i++)
+        scanf("%d%d",&ar[i].first,&ar[i].second);
+        s.insert(ar[i].first);
+        s.insert(ar[i].second+1);
+    }
+    int cnt=1;
+    for(int it:s)
+    {
+        mp[it]=cnt;
+        cnt++;
+    }
+    for(int i=1;i<=n;i++)
+    {
+        prefix[mp[ar[i].first]]++;
+        prefix[mp[ar[i].second+1]]--;
+    }
+    for(int i=1;i<cnt;i++)prefix[i]+=prefix[i-1];
+    printf("Case %d:\n",++ii );
+    while(q--)
+    {
+        int x;
+        scanf("%d",&x);
+        if(x<*s.begin() || *(--s.end())<x)
         {
-            int u,vv;
-
-            scanf("%d %d",&u,&vv);
-
-            mx=max({mx,u,vv});
-
-            all.push_back(u);
-            all.push_back(vv);
-            v.push_back({u,vv});
+            printf("0\n");
         }
-
-        for(int i=0; i<q; i++)
+        else
         {
-            int qq;
-
-            scanf("%d",&qq);
-            mx=max(mx,qq);
-
-            all.push_back(qq);
-            query.push_back(qq);
-        }
-
-        sort(all.begin(),all.end());
-
-        int idx=1;
-
-        for(int i=0; i<all.size(); i++)
-        {
-            if(m.find(all[i])==m.end())
-                m[all[i]]=idx++;
-        }
-
-        int outer[m[mx]+5]= {0},inner[m[mx]+5]= {0};
-
-        for(int i=0; i<v.size(); i++)
-        {
-            int left=m[v[i].first];
-            int right=m[v[i].second];
-
-            outer[left]++;
-            outer[right+1]--;
-        }
-
-        int sum=0;
-
-        for(int i=1; i<=m[mx]; i++)
-        {
-            sum+=outer[i];
-            inner[i]=sum;
-
-        }
-
-        printf("Case %d:\n",ii);
-
-        for(int i=0; i<query.size(); i++)
-        {
-            int re=inner[m[query[i]]];
-            printf("%d\n",re);
+            auto it=s.lower_bound(x);
+            if(*it>x)it--;
+            printf("%d\n",prefix[mp[*it]] );
         }
     }
+    memset(prefix,0,sizeof(prefix));
+    s.clear();
+    mp.clear();
 
+}
+
+ 
+int main()
+{
+    IO();
+    int t;
+    scanf("%d",&t);
+    while(t--)
+    {
+        solve();
+    }
+    
+ 
     return 0;
 }
