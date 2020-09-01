@@ -1,3 +1,91 @@
+//// Segment Tree Solution
+#include<bits/stdc++.h>
+using namespace std;
+
+
+#define mx 100005
+#define ll long long 
+
+void IO()
+{
+  #ifndef ONLINE_JUDGE
+  freopen("in.txt","r",stdin);
+  freopen("out.txt","w",stdout);
+  #endif
+}
+
+
+int re[mx],ar[mx],mark[mx];
+int m,n,k,ii;
+int Tree[4*mx];
+vector<pair<int,int>>point[mx];
+
+void update(int node,int be,int en,int pos,int val)
+{
+  if(be>pos || en<pos)return;
+  if(be==en)
+  {
+    Tree[node]=val;
+    return;
+  }
+  int mid=(be+en)/2;
+  update(node*2,be,mid,pos,val);
+  update(node*2+1,mid+1,en,pos,val);
+  Tree[node]=Tree[node*2]+Tree[node*2+1];
+}
+
+int query(int node,int be,int en,int i,int j)
+{
+  if(be> j || i>en)return 0;
+  if(i<=be && j>=en)return Tree[node];
+  int mid=(be+en)/2;
+  return query(node*2,be,mid,i,j)+query(node*2+1,mid+1,en,i,j);
+}
+
+
+void solve()
+{
+   
+  scanf("%d%d",&n,&m);
+  for(int i=1;i<=n;i++)scanf("%d",&ar[i]),mark[ar[i]]=0,update(1,1,n,i,0),point[i].clear();
+  for(int i=1;i<=m;i++)
+  {
+    int x,y;
+    scanf("%d%d",&x,&y);
+    point[y].push_back({x,i});
+  }
+  for(int i=1;i<=n;i++)
+  {
+    if(mark[ar[i]]!=0)
+    {
+      update(1,1,n,mark[ar[i]],0);
+    }
+    mark[ar[i]]=i;
+    update(1,1,n,mark[ar[i]],1);
+    for(auto it:point[i])
+    {
+       int val=query(1,1,n,it.first,i);
+       re[it.second]=val;
+    }
+  }
+  printf("Case %d:\n",++ii );
+  for(int i=1;i<=m;i++)printf("%d\n",re[i]);
+}
+
+int main()
+{
+  IO();
+  int t=1;
+  scanf("%d",&t);
+  while(t--)
+  {
+    solve();
+  }
+  return 0;
+}
+
+//// MO's solution
+
 #include<bits/stdc++.h>
 using namespace std;
 
