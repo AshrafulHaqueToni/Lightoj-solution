@@ -1,120 +1,77 @@
-///***Bismillahir Rahmanir Rahim***///
-
-///*********************************///
-///******Ashraful Haque Toni********///
-///********Dept. of CSE,JnU*********///
-///email:ashrafulhaquetoni@gmail.com///
-///*******contact:01640690531*******///
-///*********************************///
-
-
 #include<bits/stdc++.h>
-
 using namespace std;
 
-#define         ash ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-#define         pb push_back
-#define         mp make_pair
-#define         sc(n) scanf("%d",&n);
-#define         scl(n) scanf("%I64d",&n);
-#define         sc2(m,n) scanf("%d%d",&m,&n);
-#define         sc2l(m,n) scanf("%I64d%I64d",&m,&n);
-#define         pf printf
-#define         Big(x,y) max(x,y);
-#define         Small(x,y) min(x,y);
-#define         input(array,size) for(int i=0;i<size;i++)cin>>array[i];
-#define         newline pf("\n");
-#define         f(s,l,in) for(ll i=s;i<l;i+=in)
-#define         Max INT_MAX
-#define         Min INT_MIN
-#define         pi acos(-1.0)
-#define         Memset(a,val) memset(a,val,sizeof(a));
+#define mx 105
+#define ll long long 
 
-const int mod =1e9+7;
-const int N =5e6+5;
-typedef long long ll;
+int par[mx];
+char ch[mx];
+vector<pair<int,pair<int,int>>>g;
 
+int m,n,k,ii;
 
-int node;
-vector<int>parent(105);
-
-void initialize()
+int parent(int u)
 {
-    for(int i=0;i<105;i++)parent[i]=i;
-}
-
-int pp(int x)
-{
-    return (x==parent[x])?x:(parent[x]=pp(parent[x]));
-}
-
-void Union(int x,int y)
-{
-    parent[pp(x)]=parent[pp(y)];
+  return ((u==par[u])?u : (par[u]=parent(par[u])));
 }
 
 
-
-int kruskal(vector<pair<int,pair<int,int> > >v)
+int kruskal()
 {
-    int k=0;
-    for(int i=0;i<v.size();i++)
+  int re=0;
+  m=g.size();
+  for(int i=0;i<m;i++)
+  {
+    int u=g[i].second.first;
+    int v=g[i].second.second;
+    int w=g[i].first;
+    if(parent(u)!=parent(v))
     {
-        int U=v[i].second.first;
-        int V=v[i].second.second;
-        int W=v[i].first;
-
-        if(pp(U)!=pp(V)){
-            k+=W;
-            Union(U,V);
-        }
+      par[parent(u)]=par[parent(v)];
+      //cout<<w<<endl;
+      re+=w;
     }
-    return k;
+  }
+  return re;
 }
 
+
+void solve()
+{
+   scanf("%d",&n);
+   while(1)
+   {
+     int x,y,w;
+     scanf("%d%d%d",&x,&y,&w);
+     if(x==0 && y==0 && w==0)break;
+     g.push_back({w,{x,y}});
+   }
+   for(int i=0;i<=n;i++)par[i]=i;
+   sort(g.begin(),g.end());
+   int choto=kruskal();
+  // cout<<choto<<endl;
+   for(int i=0;i<=n;i++)par[i]=i;
+    sort(g.rbegin(),g.rend());
+    int boro=kruskal();
+   // cout<<boro<<endl;
+    int gc=__gcd(choto+boro,2);
+    if(gc==2)printf("Case %d: %d\n",++ii,(boro+choto)/2 );
+    else printf("Case %d: %d/%d\n",++ii,boro+choto,2 );
+    g.clear();
+}
 
 int main()
 {
+  #ifndef ONLINE_JUDGE
+  freopen("in.txt","r",stdin);
+  freopen("out.txt","w",stdout);
+  #endif
 
-    ash;
-    int t;
-    cin>>t;
-    for(int ii=1;ii<=t;ii++)
-    {
-        cin>>node;
-        vector<pair<int,pair<int,int> > >g;
-
-        while(1)
-        {
-            int a1,a2,w;
-            cin>>a1>>a2>>w;
-            if(a1==0&&a2==0&&w==0)break;
-            g.pb({w,{a1,a2}});
-        }
-        sort(g.begin(),g.end());
-        initialize();
-        int l=kruskal(g);
-        reverse(g.begin(),g.end());
-        initialize();
-        int k=kruskal(g);
-
-        int f=l+k;
-
-        cout<<"Case "<<ii<<": ";
-
-        if(f&1){
-            cout<<f<<"/"<<2<<endl;
-        }
-        else
-        cout<<f/2<<endl;;
-
-    }
-
-
-
-
-
-    return 0;
+  int t=1;
+  scanf("%d",&t);
+  while(t--)
+  {
+    solve();
+  }
+  return 0;
 }
-
-
