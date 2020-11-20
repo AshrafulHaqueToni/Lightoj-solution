@@ -1,47 +1,55 @@
+// Created by ash_98
+
 #include<bits/stdc++.h>
 using namespace std;
 
+#define mx 100005
+#define ll long long
 #define mod 100000007
 
-int dp[51][1005],coin[51],b[51],n;
+int ar[55],br[55];
+char ch[mx];
+int dp[55][1005];
+int n,m,ii,k;
 
-int dpcall(int i,int val)
+int add(int a,int b)
 {
+	a+=b;
+	if(a>=mod)a-=mod;
+	return a;
+}
 
-    if(i>=n)
+void solve()
+{
+	scanf("%d%d",&n,&m);
+	for(int i=1;i<=n;i++)scanf("%d",&ar[i]);
+	for(int i=1;i<=n;i++)scanf("%d",&br[i]);
+
+    dp[n+1][0]=1;
+    for(int i=1;i<=m;i++)dp[n+1][i]=0;
+
+    for(int i=n;i>=1;i--)
     {
-        if(val==0)return 1;
-        return 0;
+         for(int j=0;j<=m;j++)
+         {
+         	dp[i][j]=0;
+         	for(int l=0;l<=br[i];l++)
+         	{
+         		if(l*ar[i]>j)break;
+         		dp[i][j]=add(dp[i][j],dp[i+1][j-l*ar[i]]);
+         	}
+         }
+        
     }
+    
+    printf("Case %d: %d\n",++ii, dp[1][m]);
 
-    if(dp[i][val]!=-1)return dp[i][val];
-
-    dp[i][val]=0;
-
-    for(int j=0; j<=b[i] && val-coin[i]*j>=0 ;j++)
-    {
-        dp[i][val]+=dpcall(i+1,val-coin[i]*j)%mod;
-    }
-
-    return dp[i][val]%mod;
 }
 
 int main()
 {
-     freopen("input.txt","r",stdin);
-    freopen("output.txt","w",stdout);
-
-    int t;
-    scanf("%d",&t);
-    for(int ii=1;ii<=t;ii++)
-    {
-        memset(dp,-1,sizeof(dp));
-        int k;
-        scanf("%d%d",&n,&k);
-        for(int i=0;i<n;i++)scanf("%d",coin+i);
-        for(int i=0;i<n;i++)scanf("%d",b+i);
-
-        printf("Case %d: %d\n",ii,dpcall(0,k));
-
-    }
+	int t=1;
+	scanf("%d",&t);
+	while(t--)solve();
+	return 0;
 }
