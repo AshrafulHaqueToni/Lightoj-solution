@@ -5,24 +5,24 @@ using namespace std;
 #define mx 100005
 
 ll dp[mx];
-bool visit[mx];
+bool vis[mx];
 vector<int>divi[mx];
 
 ll func(int n)
 {
     if(n==1)return 0;
     ll &re=dp[n];
-    if(visit[n])return re;
-    visit[n]=true;
+    if(vis[n])return re;
+    vis[n]=true;
     ll sum=0;
     ll sz=divi[n].size();
     for(auto it:divi[n])
     {
         if(it==n)break;
-        sum+=(func(it)+1.0)/sz;
+        sum+=func(it)+1.0;
     }
    // cout<<sum<<endl;
-    re=(sum*sz+1)/(sz-1);
+    re=(sum+1)/(sz-1);
     //cout<<re<<endl;
     return re;
 }
