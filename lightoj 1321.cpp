@@ -1,25 +1,46 @@
+// Created by ash_98
+ 
 #include<bits/stdc++.h>
 using namespace std;
+ 
+#define mx 105
+#define ll long long
+#define mod 1000000007
+ 
+int ar[mx];
+char ch[mx];
+int n,m,ii,s,k;
+double dis[mx][mx];
 
-#define ll long double
-
-void solve(int ii)
+void solve()
 {
-    ll a,b,c,d,e;
-    cin>>a>>b>>c>>d>>e;
-
-    ll t1=a/d;
-    ll t2=b/e;
-    cout<<"Case "<<ii<<": ";
-    cout<<setprecision(10)<<((a*t1+0.5*(-d)*t1*t1)+(b*t2+0.5*(-e)*t2*t2))<<" ";
-    cout<<setprecision(10)<<max(t1,t2)*c<<endl;
-
+    scanf("%d%d%d%d",&n,&m,&s,&k);
+    memset(dis,0,sizeof(dis));
+    for(int i=1;i<=m;i++)
+    {
+        int x,y,z;
+        scanf("%d%d%d",&x,&y,&z);
+        x++;
+        y++;
+        dis[x][y]=dis[y][x]=z/100.00;
+    }
+    for(int l=1;l<=n;l++)
+    {
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<=n;j++)
+            {
+                dis[i][j]=max(dis[i][j],dis[i][l]*dis[l][j]);
+            }
+        }
+    }
+    printf("Case %d %0.3lf\n",++ii,(double)s*k*2/dis[1][n]);
 }
-
+ 
 int main()
 {
-    int t;
+    int t=1;
     scanf("%d",&t);
-    for(int i=1;i<=t;i++)solve(i);
+    while(t--)solve();
     return 0;
 }
