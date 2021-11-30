@@ -1,12 +1,5 @@
 //***Bismillahir Rahmanir Rahim***//
 
-//*********************************//
-//******Ashraful Haque Toni********//
-//********Dept. of CSE,JnU*********//
-//email:ashrafulhaquetoni@gmail.com//
-//*******contact:01640690531*******//
-//*********************************//
-
 
 #include<bits/stdc++.h>
 
