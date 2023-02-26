@@ -4,65 +4,73 @@ using namespace std;
  
 #define mx 200005
 #define ll long long
-#define mod 1000000007 //998244353
  
+int Trie[mx*60][2];
+ll ar[mx];
+int n,ii,st;
+ll re,x;
 
-int Trie[mx*61][2];
-int n,m,ii,k;
-int st;
-ll re;
-
-void Insert(ll x){
+void Insert(){
     int cur=1;
     for(int i=59;i>=0;i--){
-        bool pres=((1LL<<i)&x)==(1LL<<i);
+        bool pres=((1LL<<i)&x);
         if(Trie[cur][pres]==0)Trie[cur][pres]=++st;
         cur=Trie[cur][pres];
     }
 }
 
-void query1(ll x,int bit,ll ans,int cur){
-    if(bit==-1){
-        re=min(re,ans);
-        return;
-    }
-    bool pres=((1LL<<bit)&x)==(1LL<<bit);
-    if(Trie[cur][pres^1])query1(x,bit-1,ans-(1LL<<bit),Trie[cur][pres^1]);
-    else{
-        query1(x,bit-1,ans,Trie[cur][pres]);
-    }
+void query(){
 
-}
+    int cur=1;
+    for(int i=59;i>=0;i--){
 
-void query(ll x,int bit,int cur){
-   // cout<<x<<" "<<bit<<" "<<ans<<" "<<cur<<endl;
-    if(bit==-1){
-        re=0;
-        return;
+        int bit=i;
+        bool pres=((1LL<<bit)&x);
+
+        if(Trie[cur][pres^1]){
+            ll val=(1LL<<bit);
+            bit--;
+            int ncur=Trie[cur][pres^1];
+            while(bit>=0){
+                bool npres=(1LL<<bit)&x;
+                if(Trie[ncur][npres^1]){
+                    val-=(1LL<<bit);
+                    ncur=Trie[ncur][npres^1];
+                }
+                else ncur=Trie[ncur][npres];
+                bit--;
+            }
+            re=min(re,val);
+        }
+
+        if(Trie[cur][pres])cur=Trie[cur][pres];
+        else return;
     }
-    bool pres=((1LL<<bit)&x)==(1LL<<bit);
-    
-    if(Trie[cur][pres])query(x,bit-1,Trie[cur][pres]);
-    if(Trie[cur][pres^1]){
-        ll val=(1LL<<bit);
-        query1(x,bit-1,val,Trie[cur][pres^1]);
-    }
-    
-    
 }
 
  
 void solve()
 {
     scanf("%d",&n);
-    re=1e18;
-    st=1;
-    for(int i=1;i<=n;i++){
-        ll x;
-        scanf("%lld",&x);
-        query(x,59,1);
-        Insert(x);
+    for(int i=1;i<=n;i++)scanf("%lld",&ar[i]);
+    sort(ar+1,ar+n+1);
+    
+    for(int i=2;i<=n;i++){
+        if(ar[i]==ar[i-1]){
+            printf("Case %d: 0\n",++ii );
+            return;
+        }
     }
+    
+    re=2e18;
+    st=1;
+
+    for(int i=1;i<=n;i++){
+        x=ar[i];
+        query();
+        Insert();
+    }
+
     printf("Case %d: %lld\n",++ii,re );
     for(int i=1;i<=st;i++)Trie[i][0]=Trie[i][1]=0;
  
