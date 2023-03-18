@@ -1,3 +1,1 @@
-# Lightoj-solution
-Here you can find the lightoj problems solution of mine :)
-
+Here I store all the solutions to lightoj problems that I solved.
